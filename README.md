@@ -2,10 +2,11 @@
 
 ## General Flow
 
- - Get Grammar from file
- - Pass Grammar to Parser for building
+ 1. Get Grammar from file
+ 2. Pass Grammar to Parser for building
    - Errors like ShiftReduceException or ReduceReduceException may be raised
- - Input is given to the ParseTable to check if it satisfies the grammar
+ 3. Input is given to the ParseTable to check if it satisfies the grammar
+ 4. Output is given according to whether the given string is accepted or not
 
 ## Grammar
 The Grammar file will be of the format
