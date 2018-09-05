@@ -4,7 +4,7 @@
 
  1. Get Grammar from file
  2. Pass Grammar to Parser for building
-   - Errors like ShiftReduceException or ReduceReduceException may be raised
+     - Errors like ShiftReduceException or ReduceReduceException may be raised
  3. Input is given to the ParseTable to check if it satisfies the grammar
  4. Output is given according to whether the given string is accepted or not
 
