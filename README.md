@@ -22,14 +22,15 @@ Capital letters are considered to be Variables and small letters are considered 
 ```
 ProdType : pair<char, string>
 Grammar : vector<ProdType>
-Alphabet : set<char>
 ParseCell : pair<char, int>
 ParseRow : vector<ParseCell>
 ParseTable: vector<ParseRow>
 ```
 
-### Alphabet
- - Will have functions like isTerminal(char), isVariable(char)
+### Grammar
+ - parseFile takes in a filename and builds the grammar
+ - parseSymbols extracts the terminals and variables from the grammar
+ - getGrammar returns the grammar built
 
 ### Parser
 
