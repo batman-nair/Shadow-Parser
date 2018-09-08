@@ -4,6 +4,11 @@
 #include <vector>
 #include <fstream>
 
+GrammarFileReader::GrammarFileReader(std::string filename) {
+    parseFile(filename);
+    parseSymbols();
+}
+
 void GrammarFileReader::parseFile(std::string filename) {
     std::ifstream grammar_file(filename);
 
