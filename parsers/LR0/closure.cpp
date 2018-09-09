@@ -6,7 +6,7 @@
 using namespace std;
 #include "types.h"
 // #include "findclosure.h"
-#include "parse.h"
+#include "LR0.h"
 
 
 
@@ -40,15 +40,9 @@ int main(){
 
   addDot(productions);
 
-  parseGrammar(productions);
-  // for(int i=0;i<productions.size();i++){
-  //     ProdType str = productions[i];
-  //     Grammar output =  findClosure(str, productions);
-  //
-  //     for(auto itr=output.begin();itr!=output.end();itr++)
-  //         cout<<(*itr).first<<"->"<<(*itr).second<<endl;
-  //       cout<<endl;
-  //   }
+  LR0Parser lr;
+  lr.parseGrammar(productions);
+  lr.printStates();
 
 
   return 0;
