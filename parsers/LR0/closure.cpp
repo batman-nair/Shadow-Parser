@@ -13,9 +13,9 @@ using namespace std;
 
 vector<string> initializeGrammar(){
   RawGrammar g;
-  g.push_back("S->AA");
-  g.push_back("S->AB");
-  g.push_back("B->a");
+  g.push_back("S->E");
+  g.push_back("E->E+(E)");
+  g.push_back("E->i");
   return g;
 }
 //Convert Strings to Grammar

@@ -2,8 +2,7 @@
 
 using namespace std;
 #include "types.h"
-// #include "findclosure.h"
-//????
+
 map< ProdType, int> StateMap;
 map< pair< int, char > , int> StateEdgeMap;
 
@@ -33,34 +32,40 @@ Grammar findClosure( ProdType inputPro, Grammar productions){
 
 void parseGrammar(Grammar gr  ){
       states.push_back( findClosure( gr[0], gr )  );
+
+      //Iterate through all the states
       for(int stateno = 0; stateno<states.size();stateno++){
         cout<<stateno<<endl;
-
+        //Iterate through all the productions in a state
           for(int pno=0; pno <states[stateno].size();pno++ ){
                   ProdType currentProduction = states[stateno][pno];
                   cout<<currentProduction.first<<"-> "<<currentProduction.second<<endl  ;
 
                   int dotPosition = currentProduction.second.find('.');
+                  //If the dot hasn't reached the end
                   if(dotPosition < currentProduction.second.length() -1){
                     char nextSymbol  = currentProduction.second[dotPosition+1];
                     swap(currentProduction.second[dotPosition],currentProduction.second[dotPosition+1] );
+                    //If this is an entriely new state
+                    if(StateMap.find(currentProduction) == StateMap.end()){
 
-                    if(StateEdgeMap.find( make_pair(stateno,nextSymbol)) == StateEdgeMap.end()  ){
-                      states.push_back(findClosure(currentProduction,gr));
-                      StateEdgeMap[ make_pair(stateno,nextSymbol)  ] =   states.size()-1 ;
+                      if(StateEdgeMap.find( make_pair(stateno,nextSymbol)) == StateEdgeMap.end()  ){
+                        states.push_back(findClosure(currentProduction,gr));
+                        StateEdgeMap[ make_pair(stateno,nextSymbol)  ] =   states.size()-1 ;
+                        StateMap[currentProduction] = states.size()-1;
+                      }
+                      else{
+                          Grammar additionalPro = findClosure(currentProduction,gr);
+                          int key = StateEdgeMap[ make_pair( stateno,nextSymbol  ) ];
+                          states[key ].insert(states[key].end(), additionalPro.begin(),additionalPro.end()  )    ;
+                      }
                     }
+                    //If the new state is a duplicate
+                    //Map to that state
                     else{
-                        Grammar additionalPro = findClosure(currentProduction,gr);
-                        int key = StateEdgeMap[ make_pair( stateno,nextSymbol  ) ];
-                        states[key ].insert(states[key].end(), additionalPro.begin(),additionalPro.end()  )    ;
-                    }
-
+                        StateEdgeMap[  make_pair(stateno,nextSymbol) ] = StateMap[currentProduction];
                   }
-
-
-
           }
-          cout<<endl;
-
       }
+    }
 }
