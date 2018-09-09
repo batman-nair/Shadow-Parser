@@ -10,25 +10,31 @@ class GrammarFileReader {
     std::set<char> vars_;
     char start_sym;
 
-    GrammarFileReader();
-    GrammarFileReader(std::string);
+    public:
+        GrammarFileReader();
+        GrammarFileReader(std::string);
 
-    void parseFile(std::string);
-    void parseSymbols();
+        void parseFile(std::string);
+        void parseSymbols();
 
-    void printGrammar();
-    void printVariables();
-    void printTerminals();
+        void printGrammar();
+        void printVariables();
+        void printTerminals();
+        void print() {
+            printGrammar();
+            printVariables();
+            printTerminals();
+        }
 
-    bool isVariable(char var) {
-       return (vars_.find(var) != vars_.end());
-    }
-    bool isTerminal(char term) {
-       return (terms_.find(term) != terms_.end());
-    }
+        bool isVariable(char var) {
+           return (vars_.find(var) != vars_.end());
+        }
+        bool isTerminal(char term) {
+           return (terms_.find(term) != terms_.end());
+        }
 
-    Grammar getGrammar() { return grammar_; }
-    std::set<char> getTerminals() { return terms_; }
-    std::set<char> getVariables() { return vars_; }
-    char getStartSym() { return start_sym; }
+        Grammar getGrammar() { return grammar_; }
+        std::set<char> getTerminals() { return terms_; }
+        std::set<char> getVariables() { return vars_; }
+        char getStartSym() { return start_sym; }
 };
