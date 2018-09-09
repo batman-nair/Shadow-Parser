@@ -5,7 +5,6 @@
 
 using namespace std;
 #include "types.h"
-// #include "findclosure.h"
 #include "LR0.h"
 
 
