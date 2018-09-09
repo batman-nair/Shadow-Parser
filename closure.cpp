@@ -5,42 +5,16 @@
 
 using namespace std;
 #include "types.h"
-#include "findclosure.h"
+// #include "findclosure.h"
+#include "parse.h"
 
 
-//Input is a a particular production
-//Returns a Canonical state
-//Function to find the closure state
 
-// Grammar findClosure( ProdType inputPro, Grammar &productions ){
-//
-//   Grammar closure;
-//   // Grammar productions;
-//
-//   string addedNterm="";
-//
-//   closure.push_back(inputPro);
-//
-//   for(auto itr=0;itr<closure.size();itr++){
-//         int dotpos= closure[itr].second.find(".");
-//         char symbol = closure[itr].second[dotpos+1];
-//         if(isupper(symbol) && (addedNterm.find(symbol))==string::npos){
-//                 for(auto jtr=productions.begin(); jtr!= productions.end(); jtr++){
-//                     if((*jtr).first == symbol)
-//                         closure.push_back(make_pair((*jtr).first,(*jtr).second));
-//                 }
-//
-//                 addedNterm+=symbol;
-//         }
-//   }
-//   return closure;
-// }
-//
 
 vector<string> initializeGrammar(){
   RawGrammar g;
   g.push_back("S->AA");
-  g.push_back("S->B");
+  g.push_back("S->AB");
   g.push_back("B->a");
   return g;
 }
@@ -66,14 +40,15 @@ int main(){
 
   addDot(productions);
 
-  for(int i=0;i<productions.size();i++){
-      ProdType str = productions[i];
-      Grammar output =  findClosure(str, productions);
-
-      for(auto itr=output.begin();itr!=output.end();itr++)
-          cout<<(*itr).first<<"->"<<(*itr).second<<endl;
-        cout<<endl;
-    }
+  parseGrammar(productions);
+  // for(int i=0;i<productions.size();i++){
+  //     ProdType str = productions[i];
+  //     Grammar output =  findClosure(str, productions);
+  //
+  //     for(auto itr=output.begin();itr!=output.end();itr++)
+  //         cout<<(*itr).first<<"->"<<(*itr).second<<endl;
+  //       cout<<endl;
+  //   }
 
 
   return 0;

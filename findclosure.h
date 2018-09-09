@@ -2,6 +2,11 @@
 #include<iterator>
 using namespace std;
 #include "types.h";
+
+//Input is a a particular production
+//Returns a Canonical state
+//Function to find the closure state
+
 Grammar findClosure( ProdType inputPro, Grammar productions){
 
   Grammar closure;
