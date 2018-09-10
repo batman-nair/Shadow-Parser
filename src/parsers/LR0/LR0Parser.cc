@@ -26,7 +26,7 @@ Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
     return closure;
 }
 
-void LR0Parser::parseGrammar(Grammar gr){
+void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char> variables){
     augment(gr);
 
     states.push_back( findClosure( gr[0], gr )  );
@@ -62,8 +62,14 @@ void LR0Parser::parseGrammar(Grammar gr){
                     StateEdgeMap[  std::make_pair(stateno,nextsymbol) ] = StateMap[currentproduction];
                 }
             }
+            //If its a final state
+            else{
+                  StateEdgeMap[ std::make_pair(stateno,'$')]= -1;
+            }
         }
     }
+
+    buildTable(terminals,variables);
 }
 
 void LR0Parser::printStates(){
@@ -71,6 +77,54 @@ void LR0Parser::printStates(){
         std::cout<<"I"<<i<<std::endl;
         for(int j=0;j<states[i].size();j++){
             std::cout<<states[i][j].first<<" -> "<<states[i][j].second<<std::endl;
+        }
+        std::cout<<std::endl;
+    }
+}
+
+void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
+
+      int rows,cols,i=0;
+      rows = states.size()+1;
+      cols = terminals.size() + variables.size() +1;
+
+      ParseRowType parseRow(cols);
+      parseRow[i++] = "State";
+      while( i<cols ){
+          for(auto terminal : terminals)
+              parseRow[i++] =terminal;
+          for(auto variable : variables)
+              parseRow[i++] =variable;
+      }
+    parseTable_.push_back(parseRow);
+
+    for(int i=0;i<states.size();i++){
+        ParseRowType tmpRow(cols);
+        tmpRow[0]= "I" + std::to_string(i);
+        for(int j=1;j<parseRow.size();j++){
+            if( StateEdgeMap.find( std::make_pair(i,parseRow[j][0]) ) == StateEdgeMap.end() )
+                  tmpRow[j]=" ";
+            else{
+                  int nextState = StateEdgeMap[ std::make_pair(i,parseRow[j][0]) ];
+                  if(nextState == -1)
+                        tmpRow[j] = "acc";
+                  else{//Whether it's a shift or reduce
+                      std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "R" : "S";
+                      tmpRow[j]= sOrR + std::to_string(nextState);
+                  }
+              }
+        }
+        parseTable_.push_back(tmpRow);
+    }
+
+}
+
+
+void LR0Parser::printTable(){
+    std::cout<<"Parse Table\n";
+    for(auto row : parseTable_){
+        for(auto cell : row){
+            std::cout<<cell<<"\t";
         }
         std::cout<<std::endl;
     }

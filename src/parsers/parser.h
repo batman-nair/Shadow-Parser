@@ -4,14 +4,17 @@
 #include<string>
 #include<utility>
 #include<map>
+#include<set>
 class Parser {
-public:
-    virtual void parseGrammar(Grammar) = 0;
-    virtual void printStates() = 0;
+      protected:
+          void augment( Grammar &pr ){
+              pr.vector::insert( pr.begin(), ProdType('Z',std::string(1,pr[0].first) ) );
+              for(auto i = pr.begin(); i!=pr.end(); i++)
+                  (*i).second="."+(*i).second;
+          }
 
-    void augment( Grammar &pr ){
-        pr.vector::insert( pr.begin(), std::make_pair('Z',std::string(1,pr[0].first) ) );
-        for(auto i = pr.begin(); i!=pr.end(); i++)
-            (*i).second="."+(*i).second;
-    }
+      public:
+          virtual void parseGrammar(Grammar,std::set<char>, std::set<char>) = 0;
+          virtual void printStates() = 0;
+          virtual void printTable() =0;
 };

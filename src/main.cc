@@ -12,12 +12,11 @@ int main() {
     gram.print();
 
     Parser *parser = new LR0Parser();
-    parser->parseGrammar(gram.getGrammar());
+    parser->parseGrammar(gram.getGrammar(), gram.getTerminals(),gram.getVariables());
     parser->printStates();
 
     // TODO : Building the ParseTable and checking
-
-
+    // parseGrammar() automatically calls buildTable()
+    parser->printTable();
     return 0;
 }
-
