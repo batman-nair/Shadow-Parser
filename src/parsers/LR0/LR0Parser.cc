@@ -27,7 +27,7 @@ Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
 }
 
 void LR0Parser::parseGrammar(Grammar gr){
-    addDot(gr);
+    augment(gr);
 
     states.push_back( findClosure( gr[0], gr )  );
 

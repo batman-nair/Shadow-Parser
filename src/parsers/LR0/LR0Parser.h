@@ -16,10 +16,7 @@ class LR0Parser : public Parser {
 
     Grammar findClosure(ProdType inputPro, Grammar productions);
 
-    void addDot( Grammar &pr ){
-        for(auto i = pr.begin(); i!=pr.end(); i++)
-            (*i).second="."+(*i).second;
-    }
+    
 
     public:
         void parseGrammar(Grammar);
