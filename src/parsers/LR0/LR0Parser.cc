@@ -5,7 +5,8 @@
 #include <map>
 #include <utility>
 #include <iostream>
-
+#include <algorithm>
+#include <climits>
 Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
     Grammar closure;
     std::string addedNterm="";
@@ -64,7 +65,19 @@ void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char
             }
             //If its a final state
             else{
-                  StateEdgeMap[ std::make_pair(stateno,' ')]= -1 *  StateMap[currentproduction] ;
+              //TODO change map
+                  //If it's the augmented production
+
+                  if(currentproduction.first == 'Z'){
+                      StateEdgeMap[std::make_pair(stateno,'$') ] = INT_MIN;
+                      //Accepting state
+                  }
+                  else{
+                      ProdType tmp = currentproduction;
+                      tmp.second ='.'+ tmp.second.substr(0, tmp.second.size() - 1);
+                      StateEdgeMap[ std::make_pair(stateno,' ')]= -1 *  (std::find(gr.begin(), gr.end(), tmp) - gr.begin() );
+                  }
+
             }
         }
     }
@@ -107,21 +120,26 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
               reduction =true;
         }
         for(int j=1;j<parseRow.size();j++){
+            //If theres isnt an entry
             if( StateEdgeMap.find( std::make_pair(i,parseRow[j][0]) ) == StateEdgeMap.end() )
                   tmpRow[j]=" ";
             else{
                   int nextState = StateEdgeMap[ std::make_pair(i,parseRow[j][0]) ];
-                  if(nextState == -1);
-                        // tmpRow[j] = "acc";
-                  else{//Whether it's a shift or reduce
+                  if(nextState == INT_MIN)
+                        tmpRow[j] = "acc";
+                  else{
+                      //Whether it's a shift or reduce
                       std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "S" : "";
                       tmpRow[j]= sOrR + std::to_string(nextState);
                   }
               }
 
-              if(reduction){
-                  parseRow[j]= parseRow[j] + ' ' + std::to_string( StateEdgeMap[std::make_pair(i,' ') ] );
-              }
+
+        }
+        //If reduction
+        if(reduction){
+          for(int j=1;j<=terminals.size();j++)//TODO concatenate  isntead of overwriting
+            tmpRow[j]= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] );
         }
         parseTable_.push_back(tmpRow);
     }
