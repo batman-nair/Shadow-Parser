@@ -121,8 +121,8 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
         }
         for(int j=1;j<parseRow.size();j++){
             //If theres isnt an entry
-            if( StateEdgeMap.find( std::make_pair(i,parseRow[j][0]) ) == StateEdgeMap.end() )
-                  tmpRow[j]=" ";
+            if( StateEdgeMap.find( std::make_pair(i,parseRow[j][0]) ) == StateEdgeMap.end() );
+                  // tmpRow[j]="";
             else{
                   int nextState = StateEdgeMap[ std::make_pair(i,parseRow[j][0]) ];
                   if(nextState == INT_MIN)
@@ -130,7 +130,7 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
                   else{
                       //Whether it's a shift or reduce
                       std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "S" : "";
-                      tmpRow[j]= sOrR + std::to_string(nextState);
+                      tmpRow[j]+= sOrR + std::to_string(nextState)+ ' ';
                   }
               }
 
@@ -139,7 +139,7 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
         //If reduction
         if(reduction){
           for(int j=1;j<=terminals.size();j++)//TODO concatenate  isntead of overwriting
-            tmpRow[j]= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] );
+            tmpRow[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
         }
         parseTable_.push_back(tmpRow);
     }
