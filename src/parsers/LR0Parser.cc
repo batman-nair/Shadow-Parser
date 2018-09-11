@@ -12,7 +12,7 @@ Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
     std::string addedNterm="";
 
     closure.push_back(inputPro);
-    for(auto itr=0;itr<closure.size();itr++){
+    for(std::size_t itr=0;itr<closure.size();itr++){
         int dotpos= closure[itr].second.find(".");
         char symbol = closure[itr].second[dotpos+1];
         if(isupper(symbol) && (addedNterm.find(symbol))==std::string::npos){
@@ -33,12 +33,12 @@ void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char
     states.push_back( findClosure( gr[0], gr )  );
 
     //iterate through all the states
-    for(int stateno = 0; stateno<states.size();stateno++){
+    for(std::size_t stateno = 0; stateno<states.size();stateno++){
         //iterate through all the productions in a state
-        for(int pno=0; pno <states[stateno].size();pno++ ){
+        for(std::size_t pno=0; pno <states[stateno].size();pno++ ){
             ProdType currentproduction = states[stateno][pno];
 
-            int dotposition = currentproduction.second.find('.');
+            std::size_t dotposition = currentproduction.second.find('.');
             //if the dot hasn't reached the end
             if(dotposition < currentproduction.second.length() -1){
                 char nextsymbol  = currentproduction.second[dotposition+1];
@@ -86,9 +86,9 @@ void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char
 }
 
 void LR0Parser::printStates(){
-    for(int i=0;i<states.size();i++){
+    for(std::size_t i=0;i<states.size();i++){
         std::cout<<"I"<<i<<std::endl;
-        for(int j=0;j<states[i].size();j++){
+        for(std::size_t j=0;j<states[i].size();j++){
             std::cout<<states[i][j].first<<" -> "<<states[i][j].second<<std::endl;
         }
         std::cout<<std::endl;
@@ -97,8 +97,7 @@ void LR0Parser::printStates(){
 
 void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
 
-      int rows,cols,i=0;
-      rows = states.size()+1;
+      int cols,i=0;
       cols = terminals.size() + variables.size() +1;
 
       ParseRowType parseRow(cols);
@@ -111,7 +110,7 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
       }
     parseTable_.push_back(parseRow);
 
-    for(int i=0;i<states.size();i++){
+    for(std::size_t i=0;i<states.size();i++){
         ParseRowType tmpRow(cols);
         tmpRow[0]= "I" + std::to_string(i);
         bool reduction =false;
@@ -119,7 +118,7 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
         if(StateEdgeMap.find(std::make_pair(i,' ')) != StateEdgeMap.end()){
               reduction =true;
         }
-        for(int j=1;j<parseRow.size();j++){
+        for(std::size_t j=1;j<parseRow.size();j++){
             //If theres isnt an entry
             if( StateEdgeMap.find( std::make_pair(i,parseRow[j][0]) ) == StateEdgeMap.end() );
                   // tmpRow[j]="";
@@ -138,7 +137,7 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
         }
         //If reduction
         if(reduction){
-          for(int j=1;j<=terminals.size();j++)//TODO concatenate  isntead of overwriting
+          for(std::size_t j=1;j<=terminals.size();j++)//TODO concatenate  isntead of overwriting
             tmpRow[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
         }
         parseTable_.push_back(tmpRow);
