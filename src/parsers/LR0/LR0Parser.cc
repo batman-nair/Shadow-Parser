@@ -64,7 +64,7 @@ void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char
             }
             //If its a final state
             else{
-                  StateEdgeMap[ std::make_pair(stateno,'$')]= -1;
+                  StateEdgeMap[ std::make_pair(stateno,' ')]= -1 *  StateMap[currentproduction] ;
             }
         }
     }
@@ -101,17 +101,26 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
     for(int i=0;i<states.size();i++){
         ParseRowType tmpRow(cols);
         tmpRow[0]= "I" + std::to_string(i);
+        bool reduction =false;
+
+        if(StateEdgeMap.find(std::make_pair(i,' ')) != StateEdgeMap.end()){
+              reduction =true;
+        }
         for(int j=1;j<parseRow.size();j++){
             if( StateEdgeMap.find( std::make_pair(i,parseRow[j][0]) ) == StateEdgeMap.end() )
                   tmpRow[j]=" ";
             else{
                   int nextState = StateEdgeMap[ std::make_pair(i,parseRow[j][0]) ];
-                  if(nextState == -1)
-                        tmpRow[j] = "acc";
+                  if(nextState == -1);
+                        // tmpRow[j] = "acc";
                   else{//Whether it's a shift or reduce
-                      std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "R" : "S";
+                      std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "S" : "";
                       tmpRow[j]= sOrR + std::to_string(nextState);
                   }
+              }
+
+              if(reduction){
+                  parseRow[j]= parseRow[j] + ' ' + std::to_string( StateEdgeMap[std::make_pair(i,' ') ] );
               }
         }
         parseTable_.push_back(tmpRow);
