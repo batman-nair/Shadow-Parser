@@ -1,5 +1,5 @@
-#include "../../types.h"
-#include "LR0Parser.h"
+#include "types.h"
+#include "parsers/LR0Parser.h"
 #include <string>
 #include <vector>
 #include <map>

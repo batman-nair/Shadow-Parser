@@ -2,8 +2,8 @@
 
 #include "types.h"
 #include "grammar.h"
-#include "parsers/parser.h"
-#include "parsers/LR0/LR0Parser.h"
+#include "parser.h"
+#include "parsers/LR0Parser.h"
 
 
 int main() {

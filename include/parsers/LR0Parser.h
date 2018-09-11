@@ -1,6 +1,6 @@
 #pragma once
-#include "../../types.h"
-#include "../parser.h"
+#include "types.h"
+#include "parser.h"
 #include <map>
 #include <vector>
 #include <utility>
