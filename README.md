@@ -2,11 +2,19 @@
 
 ## General Flow
 
+Main flow of the program is in `main.cc` inside the src folder
+
  1. Get Grammar from file
  2. Pass Grammar to Parser for building
      - Errors like ShiftReduceException or ReduceReduceException may be raised
- 3. Input is given to the ParseTable to check if it satisfies the grammar
+ 3. Input is given to the Parser to check if it satisfies the grammar
  4. Output is given according to whether the given string is accepted or not
+
+## Building
+
+ - Run `make` in the root directory to build the project, object files go inside the build directory
+ - Generates a final binary in the root directory `shadow-parser`
+ - `make clean` removes all build files and cleans up the project
 
 ## Grammar
 The Grammar file will be of the format
@@ -22,9 +30,8 @@ Capital letters are considered to be Variables and small letters are considered 
 ```
 ProdType : pair<char, string>
 Grammar : vector<ProdType>
-ParseCell : pair<char, int>
-ParseRow : vector<ParseCell>
-ParseTable: vector<ParseRow>
+ParseRowType : vector<string>
+ParseTableType: vector<ParseRowType>
 ```
 
 ### Grammar
@@ -34,9 +41,11 @@ ParseTable: vector<ParseRow>
 
 ### Parser
 
-#### build(Grammar) -> ParseTable
- - Called as Constructor
- - Takes Grammar as input and outputs a ParseTable
+ - Abstract class for all the parsers to build on
+
+#### parseGrammar(Grammar, set<char>, set<char>)
+ - Takes Grammar, terminals and variables as input
+ - builds a parse table as a variable in the class
 
 ### ParseTable
  - Length of ParseRow is same as the number of Alphabets
@@ -50,7 +59,8 @@ ParseTable: vector<ParseRow>
 
 ## Folder and File Structure
  - All source files go inside the src folder
- - All parser files go inside the parser folder inside the src folder
+ - All header files go inside the include folder
+ - All parser files go inside the parser folder inside the corresponding folder
  - All C++ files use the extension .cc and all headers use the extension .h
  - `main.cc` file inside the src folder handles the general flow of the program
 

@@ -13,6 +13,8 @@ class GrammarFileReader {
     std::map<char, std::set<char>> firsts_;
     std::map<char, std::set<char>> follows_;
 
+    void findFirsts(char non_term);
+    void findFollows(char non_term);
 
     public:
         GrammarFileReader();
@@ -22,10 +24,7 @@ class GrammarFileReader {
         void parseSymbols();
 
         void findFirsts();
-        void findFirsts(char non_term);
         void findFollows();
-        void findFollows(char non_term);
-
 
         void printGrammar();
         void printVariables();
