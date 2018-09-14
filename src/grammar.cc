@@ -46,7 +46,7 @@ void GrammarFileReader::parseSymbols() {
 
     // Setting the start symbol in the grammar
     // Start symbol is first non terminal production in grammar
-    start_sym = grammar_.begin()->first;
+    start_sym_ = grammar_.begin()->first;
 }
 
 void GrammarFileReader::printGrammar() {
@@ -137,4 +137,80 @@ void GrammarFileReader::printFirsts() {
         std::cout<<"\n";
     }
     std::cout<<"\n";
+}
+
+void GrammarFileReader::findFollows() {
+	follows_[start_sym_].insert('$');
+	findFollows(start_sym_);
+	// Find follows for rest of variables
+	for(auto it = vars_.begin(); it != vars_.end(); ++it) {
+		if(follows_[*it].empty()) {
+			findFollows(*it);
+		}
+	}
+}
+
+void GrammarFileReader::findFollows(char non_term) {
+	// cout<<"Finding follow of "<<non_term<<"\n";
+
+	for(auto it = grammar_.begin(); it != grammar_.end(); ++it) {
+
+		// finished is true when finding follow from this production is complete
+		bool finished = true;
+		auto ch = it->second.begin();
+
+		// Skip variables till reqd non terminal
+		for(;ch != it->second.end() ; ++ch) {
+			if(*ch == non_term) {
+				finished = false;
+				break;
+			}
+		}
+		++ch;
+
+		for(;ch != it->second.end() && !finished; ++ch) {
+			// If non terminal, just append to follow
+			if(!isupper(*ch)) {
+				follows_[non_term].insert(*ch);
+				finished = true;
+				break;
+			}
+
+            std::set<char> firsts_copy(firsts_[*ch]);
+			// If char's firsts doesnt have epsilon follow search is over
+			if(firsts_copy.find('e') == firsts_copy.end()) {
+				follows_[non_term].insert(firsts_copy.begin(), firsts_copy.end());
+				finished = true;
+				break;
+			}
+			// Else next char has to be checked after appending firsts to follow
+			firsts_copy.erase('e');
+			follows_[non_term].insert(firsts_copy.begin(), firsts_copy.end());
+
+		}
+
+
+		// If end of production, follow same as follow of variable
+		if(ch == it->second.end() && !finished) {
+			// Find follow if it doesn't have
+			if(follows_[it->first].empty()) {
+				findFollows(it->first);
+			}
+			follows_[non_term].insert(follows_[it->first].begin(), follows_[it->first].end());
+		}
+
+	}
+}
+
+void GrammarFileReader::printFollows() {
+    std::cout<<"Follows list: \n";
+	for(auto it = follows_.begin(); it != follows_.end(); ++it) {
+        std::cout<<it->first<<" : ";
+		for(auto follows_it = it->second.begin(); follows_it != it->second.end(); ++follows_it) {
+            std::cout<<*follows_it<<" ";
+		}
+        std::cout<<"\n";
+	}
+    std::cout<<"\n";
+
 }
