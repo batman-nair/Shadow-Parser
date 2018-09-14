@@ -143,9 +143,9 @@ void GrammarFileReader::findFollows() {
 	follows_[start_sym_].insert('$');
 	findFollows(start_sym_);
 	// Find follows for rest of variables
-	for(auto it = vars_.begin(); it != vars_.end(); ++it) {
-		if(follows_[*it].empty()) {
-			findFollows(*it);
+	for(char ch: vars_) {
+		if(follows_[ch].empty()) {
+			findFollows(ch);
 		}
 	}
 }
