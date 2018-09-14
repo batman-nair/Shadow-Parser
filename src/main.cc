@@ -5,11 +5,12 @@
 #include "parser.h"
 #include "parsers/LR0Parser.h"
 
-
 int main() {
     // Building the grammar
     GrammarFileReader gram("testgrammar.txt");
     gram.print();
+    gram.findFirsts();
+    gram.printFirsts();
 
     Parser *parser = new LR0Parser();
     parser->parseGrammar(gram.getGrammar(), gram.getTerminals(),gram.getVariables());
