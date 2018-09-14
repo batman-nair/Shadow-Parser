@@ -2,7 +2,7 @@ CXX := g++ # This is the main compiler
 
 SRCDIR := src
 BUILDDIR := build
-TARGET := beaver
+TARGET := shadow-parser
 
 SRCEXT := cc
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
