@@ -9,10 +9,6 @@ int main() {
     // Building the grammar
     GrammarFileReader gram("testgrammar.txt");
     gram.print();
-    gram.findFirsts();
-    gram.findFollows();
-    gram.printFirsts();
-    gram.printFollows();
 
     Parser *parser = new LR0Parser();
     parser->parseGrammar(gram.getGrammar(), gram.getTerminals(),gram.getVariables());

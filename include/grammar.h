@@ -16,6 +16,9 @@ class GrammarFileReader {
     void findFirsts(char non_term);
     void findFollows(char non_term);
 
+    void findFirsts();
+    void findFollows();
+
     public:
         GrammarFileReader();
         GrammarFileReader(std::string);
@@ -23,19 +26,18 @@ class GrammarFileReader {
         void parseFile(std::string);
         void parseSymbols();
 
-        void findFirsts();
-        void findFollows();
-
         void printGrammar();
         void printVariables();
         void printTerminals();
+        void printFirsts();
+        void printFollows();
         void print() {
             printGrammar();
             printVariables();
             printTerminals();
+            printFirsts();
+            printFollows();
         }
-        void printFirsts();
-        void printFollows();
 
         bool isVariable(char var) {
            return (vars_.find(var) != vars_.end());

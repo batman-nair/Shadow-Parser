@@ -47,6 +47,9 @@ void GrammarFileReader::parseSymbols() {
     // Setting the start symbol in the grammar
     // Start symbol is first non terminal production in grammar
     start_sym_ = grammar_.begin()->first;
+
+    findFirsts();
+    findFollows();
 }
 
 void GrammarFileReader::printGrammar() {
