@@ -14,7 +14,7 @@ class Parser {
           }
 
       public:
-          virtual void parseGrammar(Grammar,std::set<char>, std::set<char>) = 0;
+          virtual void parseGrammar(Grammar,std::set<char>, std::set<char>,std::map<char, std::set<char>> ) = 0;
           virtual void printStates() = 0;
           virtual void printTable() =0;
 };

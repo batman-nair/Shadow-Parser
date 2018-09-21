@@ -205,6 +205,7 @@ void GrammarFileReader::findFollows(char non_term) {
 	}
 }
 
+
 void GrammarFileReader::printFollows() {
     std::cout<<"Follows list: \n";
 	for(auto it = follows_.begin(); it != follows_.end(); ++it) {

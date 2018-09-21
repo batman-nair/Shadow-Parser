@@ -51,5 +51,6 @@ class GrammarFileReader {
         std::set<char> getVariables() { return vars_; }
         std::set<char> getFirsts(char var) { return firsts_[var]; }
         std::set<char> getFollows(char var) { return follows_[var]; }
+        std::map<char, std::set<char>> getAllFollows() { return follows_; }
         char getStartSym() { return start_sym_; }
 };
