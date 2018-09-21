@@ -27,7 +27,7 @@ Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
     return closure;
 }
 
-void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char> variables){
+void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char> variables, std::map<char, std::set<char>> follows){
     augment(gr);
 
     states.push_back( findClosure( gr[0], gr )  );

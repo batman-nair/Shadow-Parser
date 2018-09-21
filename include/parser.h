@@ -1,10 +1,11 @@
 #pragma once
 #include "types.h"
-#include<vector>
-#include<string>
-#include<utility>
-#include<map>
-#include<set>
+#include <vector>
+#include <string>
+#include <utility>
+#include <map>
+#include <set>
+
 class Parser {
       protected:
           void augment( Grammar &pr ){
@@ -14,7 +15,13 @@ class Parser {
           }
 
       public:
-          virtual void parseGrammar(Grammar,std::set<char>, std::set<char>,std::map<char, std::set<char>> ) = 0;
+          static Parser* buildParser(std::string);
+
+
+          virtual void parseGrammar(Grammar, std::set<char>, std::set<char>, std::map<char,std::set<char>> ) = 0;
+
           virtual void printStates() = 0;
-          virtual void printTable() =0;
+          virtual void printTable() = 0;
+
+          virtual ~Parser() { }
 };
