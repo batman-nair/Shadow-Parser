@@ -11,6 +11,11 @@ typedef std::vector<ProdType> GrammarType;
 
 
 class Grammar {
+
+    typedef GrammarType::iterator iterator;
+    typedef GrammarType::const_iterator const_iterator;
+    typedef GrammarType::size_type size_type;
+
     GrammarType grammar_;
     std::set<char> terms_;
     std::set<char> vars_;
@@ -65,10 +70,10 @@ class Grammar {
     void push_back(const ProdType &p) { return grammar_.push_back(p); }
 
     ProdType& operator[] (std::size_t n) { return grammar_[n]; }
-    GrammarType::iterator begin() { return grammar_.begin(); }
-    GrammarType::const_iterator begin() const { return grammar_.begin(); }
-    GrammarType::iterator end() { return grammar_.end(); }
-    GrammarType::const_iterator end() const { return grammar_.end(); }
-    GrammarType::size_type size() const { return grammar_.size(); }
-    GrammarType::iterator insert(GrammarType::iterator position, const ProdType& p) { return grammar_.insert(position, p); }
+    iterator begin() { return grammar_.begin(); }
+    const_iterator begin() const { return grammar_.begin(); }
+    iterator end() { return grammar_.end(); }
+    const_iterator end() const { return grammar_.end(); }
+    size_type size() const { return grammar_.size(); }
+    iterator insert(iterator position, const ProdType& p) { return grammar_.insert(position, p); }
 };
