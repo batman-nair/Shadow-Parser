@@ -1,12 +1,17 @@
 #pragma once
-#include "types.h"
 #include <vector>
+#include <utility>
 #include <string>
 #include <set>
 #include <map>
 
-class GrammarFileReader {
-    Grammar grammar_;
+
+typedef std::pair<char, std::string> ProdType;
+typedef std::vector<ProdType> GrammarType;
+
+
+class Grammar {
+    GrammarType grammar_;
     std::set<char> terms_;
     std::set<char> vars_;
     char start_sym_;
@@ -19,38 +24,51 @@ class GrammarFileReader {
     void findFirsts();
     void findFollows();
 
-    public:
-        GrammarFileReader();
-        GrammarFileReader(std::string);
+  public:
+    Grammar(GrammarType gram)
+        :grammar_(gram) { }
+    Grammar()
+        :grammar_() { }
 
-        void parseFile(std::string);
-        void parseSymbols();
+    GrammarType getVector() { return grammar_; }
+    void parseSymbols();
 
-        void printGrammar();
-        void printVariables();
-        void printTerminals();
-        void printFirsts();
-        void printFollows();
-        void print() {
-            printGrammar();
-            printVariables();
-            printTerminals();
-            printFirsts();
-            printFollows();
-        }
+    void printGrammar();
+    void printVariables();
+    void printTerminals();
+    void printFirsts();
+    void printFollows();
+    void print() {
+        printGrammar();
+        printVariables();
+        printTerminals();
+        printFirsts();
+        printFollows();
+    }
 
-        bool isVariable(char var) {
-           return (vars_.find(var) != vars_.end());
-        }
-        bool isTerminal(char term) {
-           return (terms_.find(term) != terms_.end());
-        }
+    bool isVariable(char var) {
+        return (vars_.find(var) != vars_.end());
+    }
+    bool isTerminal(char term) {
+        return (terms_.find(term) != terms_.end());
+    }
 
-        Grammar getGrammar() { return grammar_; }
-        std::set<char> getTerminals() { return terms_; }
-        std::set<char> getVariables() { return vars_; }
-        std::set<char> getFirsts(char var) { return firsts_[var]; }
-        std::set<char> getFollows(char var) { return follows_[var]; }
-        std::map<char, std::set<char>> getAllFollows() { return follows_; }
-        char getStartSym() { return start_sym_; }
+    std::set<char> getTerminals() { return terms_; }
+    std::set<char> getVariables() { return vars_; }
+    std::set<char> getFirsts(char var) { return firsts_[var]; }
+    std::set<char> getFollows(char var) { return follows_[var]; }
+    std::map<char, std::set<char>> getAllFollows() { return follows_; }
+    char getStartSym() { return start_sym_; }
+
+
+    // Vector Redirects
+    void push_back(const ProdType &p) { return grammar_.push_back(p); }
+
+    ProdType& operator[] (std::size_t n) { return grammar_[n]; }
+    GrammarType::iterator begin() { return grammar_.begin(); }
+    GrammarType::const_iterator begin() const { return grammar_.begin(); }
+    GrammarType::iterator end() { return grammar_.end(); }
+    GrammarType::const_iterator end() const { return grammar_.end(); }
+    GrammarType::size_type size() const { return grammar_.size(); }
+    GrammarType::iterator insert(GrammarType::iterator position, const ProdType& p) { return grammar_.insert(position, p); }
 };

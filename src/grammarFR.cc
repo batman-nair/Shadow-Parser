@@ -1,12 +1,32 @@
-#include "grammar.h"
+#include "grammarFR.h"
+#include "types.h"
 #include <iostream>
 #include <vector>
-#include <string>
-#include <set>
-#include <map>
+#include <fstream>
 
+GrammarFileReader::GrammarFileReader(std::string filename) {
+    parseFile(filename);
+    parseSymbols();
+}
 
-void Grammar::parseSymbols() {
+void GrammarFileReader::parseFile(std::string filename) {
+    std::ifstream grammar_file(filename);
+
+    if(!grammar_file.is_open()) {
+        std::cout<<"Error opening grammar file: "<<filename<<std::endl;
+    }
+
+    for(std::string line; std::getline(grammar_file, line);) {
+        char lhs = line[0];
+        std::string rhs = line.substr(3);
+
+        ProdType prod(lhs, rhs);
+
+        grammar_.push_back(prod);
+    }
+}
+
+void GrammarFileReader::parseSymbols() {
     // Parsing Variables in the grammar
     for(ProdType prod: grammar_) {
         vars_.insert(prod.first);
@@ -32,14 +52,14 @@ void Grammar::parseSymbols() {
     findFollows();
 }
 
-void Grammar::printGrammar() {
+void GrammarFileReader::printGrammar() {
     std::cout<<"Grammar: "<<std::endl;
     for(ProdType prod: grammar_) {
         std::cout<<prod.first<<"->"<<prod.second<<std::endl;
     }
 }
 
-void Grammar::printVariables() {
+void GrammarFileReader::printVariables() {
     std::cout<<"Variables in the grammar: ";
     for(char ch: vars_) {
         std::cout<<ch<<" ";
@@ -47,7 +67,7 @@ void Grammar::printVariables() {
     std::cout<<std::endl;
 }
 
-void Grammar::printTerminals() {
+void GrammarFileReader::printTerminals() {
     std::cout<<"Terminals in the grammar: ";
     for(char ch: terms_) {
         std::cout<<ch<<" ";
@@ -55,7 +75,7 @@ void Grammar::printTerminals() {
     std::cout<<std::endl;
 }
 
-void Grammar::findFirsts() {
+void GrammarFileReader::findFirsts() {
     for(char var: vars_) {
         if(firsts_[var].empty()){
             findFirsts(var);
@@ -63,7 +83,7 @@ void Grammar::findFirsts() {
     }
 }
 
-void Grammar::findFirsts(char var) {
+void GrammarFileReader::findFirsts(char var) {
 
     // std::cout<<"Finding firsts of "<<var<<"\n";
 
@@ -110,7 +130,7 @@ void Grammar::findFirsts(char var) {
     }
 }
 
-void Grammar::printFirsts() {
+void GrammarFileReader::printFirsts() {
     std::cout<<"Firsts list: \n";
     for(auto it = firsts_.begin(); it != firsts_.end(); ++it) {
         std::cout<<it->first<<" : ";
@@ -122,7 +142,7 @@ void Grammar::printFirsts() {
     std::cout<<"\n";
 }
 
-void Grammar::findFollows() {
+void GrammarFileReader::findFollows() {
 	follows_[start_sym_].insert('$');
 	findFollows(start_sym_);
 	// Find follows for rest of variables
@@ -133,7 +153,7 @@ void Grammar::findFollows() {
 	}
 }
 
-void Grammar::findFollows(char non_term) {
+void GrammarFileReader::findFollows(char non_term) {
 	// cout<<"Finding follow of "<<non_term<<"\n";
 
 	for(auto it = grammar_.begin(); it != grammar_.end(); ++it) {
@@ -186,7 +206,7 @@ void Grammar::findFollows(char non_term) {
 }
 
 
-void Grammar::printFollows() {
+void GrammarFileReader::printFollows() {
     std::cout<<"Follows list: \n";
 	for(auto it = follows_.begin(); it != follows_.end(); ++it) {
         std::cout<<it->first<<" : ";

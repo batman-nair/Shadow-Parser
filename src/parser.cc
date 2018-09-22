@@ -4,6 +4,7 @@
 #include "parsers/SLR1Parser.h"
 #include <iostream>
 #include <string>
+#include <stack>
 
 Parser* Parser::buildParser(std::string str) {
     if (str == "SLR") {

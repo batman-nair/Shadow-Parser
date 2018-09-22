@@ -1,4 +1,5 @@
 #pragma once
+#include "grammar.h"
 #include "types.h"
 #include "parser.h"
 #include <map>
@@ -9,7 +10,6 @@
 typedef std::vector< ProdType > StateType;
 
 class LR0Parser : public Parser {
-    ParseTableType parseTable_;
     std::map< ProdType, int> StateMap;
     std::map< std::pair< int, char > , int> StateEdgeMap;
     std::vector<StateType> states;

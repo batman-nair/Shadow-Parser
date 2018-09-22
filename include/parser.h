@@ -1,4 +1,5 @@
 #pragma once
+#include "grammar.h"
 #include "types.h"
 #include <vector>
 #include <string>
@@ -8,8 +9,10 @@
 
 class Parser {
       protected:
+          ParseTableType parseTable_;
+
           void augment( Grammar &pr ){
-              pr.vector::insert( pr.begin(), ProdType('Z',std::string(1,pr[0].first) ) );
+              pr.insert( pr.begin(), ProdType('Z',std::string(1,pr[0].first) ) );
               for(auto i = pr.begin(); i!=pr.end(); i++)
                   (*i).second="."+(*i).second;
           }

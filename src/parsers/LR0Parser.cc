@@ -1,3 +1,4 @@
+#include "grammar.h"
 #include "types.h"
 #include "parsers/LR0Parser.h"
 #include <string>
@@ -7,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <climits>
+
 Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
     Grammar closure;
     std::string addedNterm="";
@@ -30,7 +32,7 @@ Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
 void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char> variables, std::map<char, std::set<char>> follows){
     augment(gr);
 
-    states.push_back( findClosure( gr[0], gr )  );
+    states.push_back( findClosure( gr[0], gr ).getVector()  );
 
     //iterate through all the states
     for(std::size_t stateno = 0; stateno<states.size();stateno++){
@@ -47,7 +49,7 @@ void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char
                 if(StateMap.find(currentproduction) == StateMap.end()){
 
                     if(StateEdgeMap.find( std::make_pair(stateno,nextsymbol)) == StateEdgeMap.end()  ){
-                        states.push_back(findClosure(currentproduction,gr));
+                        states.push_back(findClosure(currentproduction,gr).getVector());
                         StateEdgeMap[ std::make_pair(stateno,nextsymbol)  ] =   states.size()-1 ;
                         StateMap[currentproduction] = states.size()-1;
                     }
