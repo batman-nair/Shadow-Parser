@@ -53,12 +53,12 @@ class Grammar {
         return (terms_.find(term) != terms_.end());
     }
 
-    std::set<char> getTerminals() { return terms_; }
-    std::set<char> getVariables() { return vars_; }
-    std::set<char> getFirsts(char var) { return firsts_[var]; }
-    std::set<char> getFollows(char var) { return follows_[var]; }
-    std::map<char, std::set<char>> getAllFollows() { return follows_; }
-    char getStartSym() { return start_sym_; }
+    std::set<char> getTerminals() { parseSymbols(); return terms_; }
+    std::set<char> getVariables() { parseSymbols(); return vars_; }
+    std::set<char> getFirsts(char var) { findFirsts(); return firsts_[var]; }
+    std::set<char> getFollows(char var) { findFollows(); return follows_[var]; }
+    std::map<char, std::set<char>> getAllFollows() { findFollows(); return follows_; }
+    char getStartSym() { parseSymbols(); return start_sym_; }
 
 
     // Vector Redirects

@@ -7,6 +7,10 @@
 
 
 void Grammar::parseSymbols() {
+    if(!terms_.empty() && !vars_.empty()) {
+        return;
+    }
+
     // Parsing Variables in the grammar
     for(ProdType prod: grammar_) {
         vars_.insert(prod.first);
@@ -27,9 +31,6 @@ void Grammar::parseSymbols() {
     // Setting the start symbol in the grammar
     // Start symbol is first non terminal production in grammar
     start_sym_ = grammar_.begin()->first;
-
-    findFirsts();
-    findFollows();
 }
 
 void Grammar::printGrammar() {
@@ -40,6 +41,8 @@ void Grammar::printGrammar() {
 }
 
 void Grammar::printVariables() {
+    parseSymbols();
+
     std::cout<<"Variables in the grammar: ";
     for(char ch: vars_) {
         std::cout<<ch<<" ";
@@ -48,6 +51,8 @@ void Grammar::printVariables() {
 }
 
 void Grammar::printTerminals() {
+    parseSymbols();
+
     std::cout<<"Terminals in the grammar: ";
     for(char ch: terms_) {
         std::cout<<ch<<" ";
@@ -56,6 +61,10 @@ void Grammar::printTerminals() {
 }
 
 void Grammar::findFirsts() {
+    if(!firsts_.empty()) {
+        return;
+    }
+
     for(char var: vars_) {
         if(firsts_[var].empty()){
             findFirsts(var);
@@ -111,6 +120,8 @@ void Grammar::findFirsts(char var) {
 }
 
 void Grammar::printFirsts() {
+    findFirsts();
+
     std::cout<<"Firsts list: \n";
     for(auto it = firsts_.begin(); it != firsts_.end(); ++it) {
         std::cout<<it->first<<" : ";
@@ -123,6 +134,10 @@ void Grammar::printFirsts() {
 }
 
 void Grammar::findFollows() {
+    if(!follows_.empty()) {
+        return;
+    }
+
 	follows_[start_sym_].insert('$');
 	findFollows(start_sym_);
 	// Find follows for rest of variables
@@ -187,6 +202,8 @@ void Grammar::findFollows(char non_term) {
 
 
 void Grammar::printFollows() {
+    findFollows();
+
     std::cout<<"Follows list: \n";
 	for(auto it = follows_.begin(); it != follows_.end(); ++it) {
         std::cout<<it->first<<" : ";
