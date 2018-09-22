@@ -6,7 +6,7 @@
 #include <iostream>
 #include <utility>
 #include <string>
-
+#include <memory>
 
 int main() {
     // Building the grammar
@@ -18,7 +18,7 @@ int main() {
     std::cout<<"Choose which type of parser: ";
     std::cin>>input;
     // Creating from ParserFactory
-    Parser *parser = Parser::buildParser(input);
+    std::unique_ptr<Parser> parser( Parser::buildParser(input) );
 
     parser->parseGrammar(gramFR.getGrammar(), gram.getTerminals(), gram.getVariables(), gram.getAllFollows());
     parser->printStates();
@@ -28,6 +28,5 @@ int main() {
 
     parser->printTable();
 
-    delete parser;
     return 0;
 }
