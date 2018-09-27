@@ -1,6 +1,6 @@
 #include "grammar.h"
-#include "types.h"
 #include "parsers/SLR1Parser.h"
+#include "parseTable.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -29,9 +29,11 @@ Grammar SLR1Parser::findClosure( ProdType inputPro, Grammar productions){
     return closure;
 }
 
-void SLR1Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char> variables, std::map<char, std::set<char>> follows){
+void SLR1Parser::parseGrammar(Grammar gr){
     augment(gr);
-
+    std::set<char> terminals = gr.getTerminals();
+    std::set<char> variables = gr.getVariables();
+    std::map<char, std::set<char>> follows = gr.getAllFollows();
     states.push_back( findClosure( gr[0], gr ).getVector()  );
 
     //iterate through all the states
@@ -84,7 +86,7 @@ void SLR1Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<cha
         }
     }
 
-    buildTable(gr,terminals,variables, follows);
+    buildTable(gr);
 }
 
 void SLR1Parser::printStates(){
@@ -97,23 +99,18 @@ void SLR1Parser::printStates(){
     }
 }
 
-void SLR1Parser::buildTable(Grammar gr,std::set<char> terminals, std::set<char> variables, std::map<char, std::set<char>> follows){
-
+void SLR1Parser::buildTable(Grammar gr){
+      std::set<char> terminals = gr.getTerminals();
+      std::set<char> variables = gr.getVariables();
+      std::map<char, std::set<char>> follows = gr.getAllFollows();
       int cols,i=0;
       cols = terminals.size() + variables.size() +1;
 
-      ParseRowType parseRow(cols);
-      parseRow[i++] = "State";
-      while( i<cols ){
-          for(auto terminal : terminals)
-              parseRow[i++] =terminal;
-          for(auto variable : variables)
-              parseRow[i++] =variable;
-      }
-    parseTable_.push_back(parseRow);
+      ParseRow parseRow("State",terminals,variables);
+      parseTable_.setHeader(parseRow);
 
     for(std::size_t i=0;i<states.size();i++){
-        ParseRowType tmpRow(cols);
+        ParseRow tmpRow(cols);
         tmpRow[0]= "I" + std::to_string(i);
         bool reduction =false;
 
@@ -150,18 +147,12 @@ void SLR1Parser::buildTable(Grammar gr,std::set<char> terminals, std::set<char> 
               tmpRow[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
           }
         }
-        parseTable_.push_back(tmpRow);
+        parseTable_.push(tmpRow);
     }
 
 }
 
 
 void SLR1Parser::printTable(){
-    std::cout<<"Parse Table\n";
-    for(auto row : parseTable_){
-        for(auto cell : row){
-            std::cout<<cell<<"\t";
-        }
-        std::cout<<std::endl;
-    }
+    parseTable_.printTable();
 }

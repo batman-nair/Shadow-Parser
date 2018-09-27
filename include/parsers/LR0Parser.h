@@ -19,8 +19,8 @@ class LR0Parser : public Parser {
 
 
     public:
-        void parseGrammar(Grammar, std::set<char>, std::set<char>, std::map<char, std::set<char>>);
+        void parseGrammar(Grammar);
         void printStates();
-        void buildTable(std::set<char>, std::set<char>);
+        void buildTable(Grammar);
         void printTable();
 };

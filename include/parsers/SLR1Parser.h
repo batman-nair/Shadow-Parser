@@ -19,8 +19,8 @@ class SLR1Parser : public Parser {
 
 
     public:
-        void parseGrammar(Grammar, std::set<char>, std::set<char>, std::map<char, std::set<char>>);
+        void parseGrammar(Grammar);
         void printStates();
-        void buildTable(Grammar, std::set<char>, std::set<char>, std::map<char, std::set<char>>);
+        void buildTable(Grammar);
         void printTable();
 };

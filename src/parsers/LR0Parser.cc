@@ -1,5 +1,4 @@
 #include "grammar.h"
-#include "types.h"
 #include "parsers/LR0Parser.h"
 #include "parseTable.h"
 #include <string>
@@ -30,9 +29,11 @@ Grammar LR0Parser::findClosure( ProdType inputPro, Grammar productions){
     return closure;
 }
 
-void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char> variables, std::map<char, std::set<char>> follows){
+void LR0Parser::parseGrammar(Grammar gr){
     augment(gr);
 
+    std::set<char> terminals = gr.getTerminals();
+    std::set<char> variables = gr.getVariables();
     states.push_back( findClosure( gr[0], gr ).getVector()  );
 
     //iterate through all the states
@@ -85,7 +86,7 @@ void LR0Parser::parseGrammar(Grammar gr, std::set<char> terminals, std::set<char
         }
     }
 
-    buildTable(terminals,variables);
+    buildTable(gr);
 }
 
 void LR0Parser::printStates(){
@@ -98,39 +99,22 @@ void LR0Parser::printStates(){
     }
 }
 
-void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
+void LR0Parser::buildTable(Grammar gr){
   ///   Takes a  grammar as argument instead
+      std::set<char> terminals = gr.getTerminals();
+      std::set<char> variables = gr.getVariables();
       int cols,i=0;
       cols = terminals.size() + variables.size() +1;
 
-      //Can be replaced by
-      // parseHeader("State, grammar.getTerminals(), grammar.getVariables() ")
-      ParseRowType parseRow(cols);
+      ParseRow parseRow("State",terminals,variables);
+      parseTable_.setHeader(parseRow);
 
-      parseRow[i++] = "State";
-
-      while( i<cols ){
-          for(auto terminal : terminals)
-              parseRow[i++] =terminal;
-          for(auto variable : variables)
-              parseRow[i++] =variable;
-      }
-      //new
-      ParseRow parseRowUsingClass("State",terminals,variables);
-      ParseTable parseTableUsingClass;
-      parseTableUsingClass.setHeader(parseRowUsingClass);
-      //
-
-    parseTable_.push_back(parseRow);
-    // Parsetable.setHeader(parseHeader)
 
     for(std::size_t i=0;i<states.size();i++){
-        ParseRowType tmpRow(cols);
         //NEW ///
-        ParseRow tmpRowUsingClass(cols);
-        tmpRowUsingClass[0] = "I" + std::to_string(i);
+        ParseRow tmpRow(cols);
+        tmpRow[0] = "I" + std::to_string(i);
         //
-        tmpRow[0]= "I" + std::to_string(i);
         bool reduction =false;
 
         if(StateEdgeMap.find(std::make_pair(i,' ')) != StateEdgeMap.end()){
@@ -144,15 +128,11 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
                   int nextState = StateEdgeMap[ std::make_pair(i,parseRow[j][0]) ];
                   if(nextState == INT_MIN){
                       tmpRow[j] = "acc";
-                      //New
-                      tmpRowUsingClass[j] = "acc";
                   }
                   else{
                       //Whether it's a shift or reduce
                       std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "S" : "";
                       tmpRow[j]+= sOrR + std::to_string(nextState)+ ' ';
-                      //New
-                      tmpRowUsingClass[j]+= sOrR + std::to_string(nextState)+ ' ';
                   }
               }
 
@@ -162,34 +142,16 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
         if(reduction){
           for(std::size_t j=1;j<=terminals.size();j++){
             tmpRow[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
-            //NEW
-            tmpRowUsingClass[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
-            //
           }
 
         }
         //Can be replaced by parseTable.push(row);
-        parseTable_.push_back(tmpRow);
-        //NEW
-        parseTableUsingClass.push(tmpRowUsingClass);
-        //
+        parseTable_.push(tmpRow);
     }
 
-
-    //Printing new Table NEWWWWWWWWWWWW
-    std::cout<<"Time fpr new table \n\n\n\n\n\n\n";
-    parseTableUsingClass.printTable();
-    std::cout<<"Time fpr new table \n\n\n\n\n\n\n";
-    
 }
 
 
 void LR0Parser::printTable(){
-    std::cout<<"Parse Table\n";
-    for(auto row : parseTable_){
-        for(auto cell : row){
-            std::cout<<cell<<"\t";
-        }
-        std::cout<<std::endl;
-    }
+    parseTable_.printTable();
 }

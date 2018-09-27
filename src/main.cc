@@ -20,13 +20,13 @@ int main() {
     // Creating from ParserFactory
     std::unique_ptr<Parser> parser( Parser::buildParser(input) );
 
-    parser->parseGrammar(gramFR.getGrammar(), gram.getTerminals(), gram.getVariables(), gram.getAllFollows());
-    parser->printStates();
+    // parser->parseGrammar(gramFR.getGrammar(), gram.getTerminals(), gram.getVariables(), gram.getAllFollows());
+    // parser->printStates();
 
     // TODO : Building the ParseTable and checking
     // parseGrammar() automatically calls buildTable()
 
-    parser->printTable();
+    // parser->printTable();
 
     return 0;
 }
