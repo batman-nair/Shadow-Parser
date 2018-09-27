@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
     parser->printTable();
     if(parser->checkString(input_string, gramFR.getGrammar())) {
         std::cout<<"\nInput string is accepted"<<std::endl;
+    } else {
+        std::cout<<"\nInput string rejected"<<std::endl;
     }
 
     return 0;
