@@ -1,6 +1,7 @@
 #include "grammar.h"
 #include "types.h"
 #include "parsers/LR0Parser.h"
+#include "parseTable.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -98,22 +99,37 @@ void LR0Parser::printStates(){
 }
 
 void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
-
+  ///   Takes a  grammar as argument instead
       int cols,i=0;
       cols = terminals.size() + variables.size() +1;
 
+      //Can be replaced by
+      // parseHeader("State, grammar.getTerminals(), grammar.getVariables() ")
       ParseRowType parseRow(cols);
+
       parseRow[i++] = "State";
+
       while( i<cols ){
           for(auto terminal : terminals)
               parseRow[i++] =terminal;
           for(auto variable : variables)
               parseRow[i++] =variable;
       }
+      //new
+      ParseRow parseRowUsingClass("State",terminals,variables);
+      ParseTable parseTableUsingClass;
+      parseTableUsingClass.setHeader(parseRowUsingClass);
+      //
+
     parseTable_.push_back(parseRow);
+    // Parsetable.setHeader(parseHeader)
 
     for(std::size_t i=0;i<states.size();i++){
         ParseRowType tmpRow(cols);
+        //NEW ///
+        ParseRow tmpRowUsingClass(cols);
+        tmpRowUsingClass[0] = "I" + std::to_string(i);
+        //
         tmpRow[0]= "I" + std::to_string(i);
         bool reduction =false;
 
@@ -126,12 +142,17 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
                   // tmpRow[j]="";
             else{
                   int nextState = StateEdgeMap[ std::make_pair(i,parseRow[j][0]) ];
-                  if(nextState == INT_MIN)
-                        tmpRow[j] = "acc";
+                  if(nextState == INT_MIN){
+                      tmpRow[j] = "acc";
+                      //New
+                      tmpRowUsingClass[j] = "acc";
+                  }
                   else{
                       //Whether it's a shift or reduce
                       std::string sOrR = terminals.find(parseRow[j][0]) != terminals.end()? "S" : "";
                       tmpRow[j]+= sOrR + std::to_string(nextState)+ ' ';
+                      //New
+                      tmpRowUsingClass[j]+= sOrR + std::to_string(nextState)+ ' ';
                   }
               }
 
@@ -139,12 +160,27 @@ void LR0Parser::buildTable(std::set<char> terminals, std::set<char> variables){
         }
         //If reduction
         if(reduction){
-          for(std::size_t j=1;j<=terminals.size();j++)//TODO concatenate  isntead of overwriting
+          for(std::size_t j=1;j<=terminals.size();j++){
             tmpRow[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
+            //NEW
+            tmpRowUsingClass[j]+= 'r' + std::to_string(-1* StateEdgeMap[std::make_pair(i,' ') ] ) + ' ';
+            //
+          }
+
         }
+        //Can be replaced by parseTable.push(row);
         parseTable_.push_back(tmpRow);
+        //NEW
+        parseTableUsingClass.push(tmpRowUsingClass);
+        //
     }
 
+
+    //Printing new Table NEWWWWWWWWWWWW
+    std::cout<<"Time fpr new table \n\n\n\n\n\n\n";
+    parseTableUsingClass.printTable();
+    std::cout<<"Time fpr new table \n\n\n\n\n\n\n";
+    
 }
 
 
