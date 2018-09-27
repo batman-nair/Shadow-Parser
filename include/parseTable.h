@@ -5,6 +5,8 @@
 #include <set>
 #include<string>
 #include<algorithm>
+#include "grammar.h"
+
 
 class ParseRow{
       std::vector<std::string> row;
@@ -38,4 +40,5 @@ class ParseTable{
             void printTable();
             std::string getMove(int stateNo, char symbol);
 
+            bool checkString(std::string, Grammar);
 };
