@@ -8,25 +8,29 @@
 #include <string>
 #include <memory>
 
-int main() {
+int main(int argc, char* argv[]) {
+    if(argc < 2) {
+        std::cout<<"./shadow-parser <parser-type> <input-string>"<<std::endl;
+        std::cout<<"Example: ./shadow-parser SLR \"i+i\""<<std::endl;
+        return 0;
+    }
+
+    std::string parser_name(argv[1]), input_string(argv[2]);
+
     // Building the grammar
     GrammarFileReader gramFR("testgrammar.txt");
     Grammar gram = gramFR.getGrammar();
     gramFR.getGrammar().print();
 
-    std::string input;
-    std::cout<<"Choose which type of parser: ";
-    std::cin>>input;
     // Creating from ParserFactory
-    std::unique_ptr<Parser> parser( Parser::buildParser(input) );
+    std::unique_ptr<Parser> parser(Parser::buildParser(parser_name));
 
-    // parser->parseGrammar(gramFR.getGrammar(), gram.getTerminals(), gram.getVariables(), gram.getAllFollows());
-    // parser->printStates();
+    parser->parseGrammar(gramFR.getGrammar());
 
-    // TODO : Building the ParseTable and checking
-    // parseGrammar() automatically calls buildTable()
-
-    // parser->printTable();
+    parser->printTable();
+    if(parser->checkString(input_string, gramFR.getGrammar())) {
+        std::cout<<"\nInput string is accepted"<<std::endl;
+    }
 
     return 0;
 }

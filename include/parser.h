@@ -26,5 +26,7 @@ class Parser {
           virtual void printStates() = 0;
           virtual void printTable() = 0;
 
+          bool checkString(std::string str, Grammar gram) { return parseTable_.checkString(str, gram); }
+
           virtual ~Parser() { }
 };

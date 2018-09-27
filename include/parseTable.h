@@ -20,7 +20,7 @@ class ParseRow{
           std::vector<std::string> getRow();
           std::string& operator[](int index);
 
-          int size();
+          std::size_t size();
           std::vector<std::string>::iterator find(std::string str);
           std::vector<std::string>::iterator begin();
 };

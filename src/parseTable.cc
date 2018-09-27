@@ -40,7 +40,7 @@ std::string& ParseRow::operator[](int index){
       return row[index];
 }
 
-int ParseRow::size(){
+std::size_t ParseRow::size(){
       return row.size();
 }
 
@@ -61,11 +61,11 @@ ParseRow& ParseTable:: operator[](int stateNo){
 }
 
 void ParseTable::printTable(){
-    for(int i=0;i<tableHeader_.size();i++)
+    for(std::size_t i=0;i<tableHeader_.size();i++)
         std::cout<<tableHeader_[i]<<"\t";
     std::cout<<"\n";
     for(std::size_t i=0;i<tableContent_.size();i++){
-          for(int j=0;j<tableContent_[i].size();j++)
+          for(std::size_t j=0;j<tableContent_[i].size();j++)
               std::cout<<tableContent_[i][j]<<"\t";
           std::cout<<"\n";
     }
@@ -82,46 +82,53 @@ bool is_number(const std::string& s)
 }
 
 bool ParseTable::checkString(std::string str, Grammar gram) {
+    str.append("$");
     std::stack<std::string> input_stack;
     input_stack.push("0");
 
-    if(is_number(input_stack.top())) {
-        int state_no = stoi(input_stack.top());
-        char input_char = str[0];
+    while(true) {
 
-        std::string action = getMove(state_no, input_char);
+            int state_no = stoi(input_stack.top());
+            char input_char = str[0];
 
-        switch(action[0]) {
-            case 'S':
-                input_stack.push(std::to_string(str[0]));
-                str.erase(str.begin());
-                input_stack.push(action.substr(1));
-                break;
-            case 'R':
-                {
-                    int production_no = stoi(action.substr(1));
-                    int size_of_production = gram[production_no-1].second.size();
-                    for(int i = 0; i < size_of_production*2; ++i) {
+            std::string action = getMove(state_no, input_char);
+
+            switch(action[0]) {
+                case 'S':
+                    input_stack.push(std::to_string(str[0]));
+                    str.erase(str.begin());
+                    input_stack.push(action.substr(1));
+
+                    break;
+                case 'r':
+                    {
+                        int production_no = stoi(action.substr(1));
+                        int size_of_production = gram[production_no-1].second.size();
+                        for(int i = 0; i < size_of_production*2; ++i) {
+                            input_stack.pop();
+                        }
+
+                        // Push reduced prod var
+
+                        input_stack.push(std::string(1, gram[production_no-1].first));
+
+                        std::string top_variable = input_stack.top();
                         input_stack.pop();
+                        int top_state_num = stoi(input_stack.top());
+                        std::string new_state_num = getMove(top_state_num, top_variable[0]);
+                        input_stack.push(top_variable);
+                        input_stack.push(new_state_num);
                     }
+                    break;
 
-                    std::string top_variable = input_stack.top();
-                    input_stack.pop();
-                    int top_state_num = stoi(input_stack.top());
-                    std::string new_state_num = getMove(top_state_num, top_variable[0]);
-                    input_stack.push(top_variable);
-                    input_stack.push(new_state_num);
-                }
-                break;
-
-            case 'a':
-                return true;
-            default:
-                return false;
+                case 'a':
+                    return true;
+                default:
+                    return false;
 
         }
-    }
 
+    }
     return false;
 }
 

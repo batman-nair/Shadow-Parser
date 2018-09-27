@@ -103,7 +103,7 @@ void SLR1Parser::buildTable(Grammar gr){
       std::set<char> terminals = gr.getTerminals();
       std::set<char> variables = gr.getVariables();
       std::map<char, std::set<char>> follows = gr.getAllFollows();
-      int cols,i=0;
+      int cols;
       cols = terminals.size() + variables.size() +1;
 
       ParseRow parseRow("State",terminals,variables);

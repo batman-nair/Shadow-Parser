@@ -103,7 +103,7 @@ void LR0Parser::buildTable(Grammar gr){
   ///   Takes a  grammar as argument instead
       std::set<char> terminals = gr.getTerminals();
       std::set<char> variables = gr.getVariables();
-      int cols,i=0;
+      int cols;
       cols = terminals.size() + variables.size() +1;
 
       ParseRow parseRow("State",terminals,variables);
