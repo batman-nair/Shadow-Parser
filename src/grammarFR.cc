@@ -1,5 +1,4 @@
 #include "grammarFR.h"
-#include "types.h"
 #include <iostream>
 #include <vector>
 #include <fstream>

@@ -1,6 +1,5 @@
 // Everything comes together here
 
-#include "types.h"
 #include "grammarFR.h"
 #include "parser.h"
 #include <iostream>

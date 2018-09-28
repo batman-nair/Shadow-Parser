@@ -1,5 +1,4 @@
 #include "parser.h"
-#include "types.h"
 #include "parsers/LR0Parser.h"
 #include "parsers/SLR1Parser.h"
 #include <iostream>

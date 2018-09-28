@@ -1,6 +1,5 @@
 #pragma once
 #include "grammar.h"
-#include "types.h"
 #include "parser.h"
 #include <map>
 #include <vector>
