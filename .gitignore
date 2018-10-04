@@ -33,3 +33,6 @@ shadow-parser
 *.exe
 *.out
 *.app
+
+# Compilation Database
+compile_commands.json
